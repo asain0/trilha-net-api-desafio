@@ -18,41 +18,56 @@ namespace TrilhaApiDesafio.Controllers
         [HttpGet("{id}")]
         public IActionResult ObterPorId(int id)
         {
-            // TODO: Buscar o Id no banco utilizando o EF
-            // TODO: Validar o tipo de retorno. Se não encontrar a tarefa, retornar NotFound,
-            // caso contrário retornar OK com a tarefa encontrada
-            return Ok();
+            Tarefa tarefaBanco = _context.Tarefas.Find(id);
+
+            if (tarefaBanco == null)
+                return NotFound();
+            
+            return Ok(tarefaBanco);
         }
 
         [HttpGet("ObterTodos")]
         public IActionResult ObterTodos()
         {
-            // TODO: Buscar todas as tarefas no banco utilizando o EF
-            return Ok();
+            List<Tarefa> listaTarefas = _context.Tarefas.ToList();
+
+            if(!listaTarefas.Any())
+                return NotFound();
+
+            return Ok(listaTarefas);
         }
 
         [HttpGet("ObterPorTitulo")]
         public IActionResult ObterPorTitulo(string titulo)
         {
-            // TODO: Buscar  as tarefas no banco utilizando o EF, que contenha o titulo recebido por parâmetro
-            // Dica: Usar como exemplo o endpoint ObterPorData
-            return Ok();
+            List<Tarefa> listaTarefas = _context.Tarefas.Where(t => t.Titulo.Contains(titulo)).ToList();
+
+            if (!listaTarefas.Any())
+                return NotFound();
+
+            return Ok(listaTarefas);
         }
 
         [HttpGet("ObterPorData")]
         public IActionResult ObterPorData(DateTime data)
         {
-            var tarefa = _context.Tarefas.Where(x => x.Data.Date == data.Date);
-            return Ok(tarefa);
+            List<Tarefa> listaTarefas = _context.Tarefas.Where(x => x.Data.Date == data.Date).ToList();
+
+            if (!listaTarefas.Any())
+                return NotFound();
+
+            return Ok(listaTarefas);
         }
 
         [HttpGet("ObterPorStatus")]
         public IActionResult ObterPorStatus(EnumStatusTarefa status)
         {
-            // TODO: Buscar  as tarefas no banco utilizando o EF, que contenha o status recebido por parâmetro
-            // Dica: Usar como exemplo o endpoint ObterPorData
-            var tarefa = _context.Tarefas.Where(x => x.Status == status);
-            return Ok(tarefa);
+            List<Tarefa> listaTarefas = _context.Tarefas.Where(t => t.Status.Equals(status)).ToList();
+
+            if (!listaTarefas.Any())
+                return NotFound();
+
+            return Ok(listaTarefas);
         }
 
         [HttpPost]
